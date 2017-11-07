@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Locations Map</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+        width: 100%;
+        background-color: gray;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: Lato, sans-serif;
+      }
+      /*
+      .locations-section {
+        position: relative;
+        overflow: hidden;
+      }
+      .locations-section * {
+        box-sizing: border-box;
+        text-decoration: none;
+      }
+      .locations-cards-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      @media (min-width: 1200px) {
+        .locations-cards-container {
+          left: 50%;
+          transform: translateX(-50%);
+          width: 1170px;
+        }
+      }
+      .locations-cards {
+        position: absolute;
+        top: 0;
+        left: 30px;
+        width: 300px;
+        height: 550px;
+        background-color: #ccc;
+      }
+      .locations-card {
+        width: 300px;
+        height: 40px;
+        overflow: hidden;
+        transition: ease-in .5s;
+      }
+      .locations-card.is-active {
+        height: 470px;
+        transition: ease-in .5s;
+      }
+      .locations-card.hospital-list .locations-panel-header h2 {
+        background-color: #152456;
+      }
+      .locations-card.outpatient-list .locations-panel-header h2 {
+        background-color: purple;
+      }
+      .locations-card.urgentcare-list .locations-panel-header h2 {
+        background-color: #ff6600;
+      }
+      .location-panel {
+        padding: 0;
+        margin: 0;
+      }
+      .locations-panel-info {
+        position: relative;
+        height: 260px;
+        padding: 20px;
+        background-color: #f2f4f8;
+        color: #152456;
+        overflow-y: scroll;
+      }
+      .locations-panel-info .info-links {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        text-align: center;
+        width: 100%;
+        padding: 10px;
+      }
+      .locations-panel-info .info-links a {
+        font-size: 14px;
+        text-transform: uppercase;
+      }
+      .locations-panel-info h3 {
+        margin: 0;
+        padding: 0;
+        color: #152456;
+        font-size: 18px;
+      }
+      .locations-panel-header h2 {
+        background-color: #333;
+        color: #fff;
+        margin: 0;
+        padding: 0 20px;
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: .07em;
+        font-weight: normal;
+        line-height: 40px;
+        height: 40px;
+        text-align: center;
+        cursor: pointer;
+      }
+      .locations-panel-header h2:hover {
+        background-color: #569bca;
+      }
+      .locations-panel-list {
+        padding: 0 20px;
+        height: 170px;
+        overflow-y: scroll;
+      }
+      .locations-panel-list > ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+      }
+      .locations-panel-list > ul > li {
+        margin: 10px 0;
+        padding-bottom: 10px;
+        font-size: 14px;
+        border-bottom: 1px solid #999;
+        cursor: pointer;
+      }
+      .locations-panel-desc {
+        padding: 10px 20px;
+        background-color: #333;
+        border-top: 1px solid #666;
+        color: #fff;
+        font-weight: 300;
+        display: none;
+      }
+      .locations-panel-desc > p {
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+      }
+      .locations-card .locations-panel-body {
+        display: none;
+      }
+      .locations-card.is-active .locations-panel-body {
+        display: block;
+      }
+      .location-info-box p span {
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: bold;
+      }
+      .location-info-box p:first-of-type {
+        font-size: 18px;
+      }
+*/
+      .locations {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .locations * {
+        box-sizing: border-box;
+      }
+      .locations__main {
+        float: left;
+        width: 70%;
+        padding-right: 30px;
+      }
+      .locations__sidebar {
+        padding: 50px 0 0 0;
+        float: left;
+        width: 30%;
+      }
+      .locations__intro > h2 {
+        font-size: 36px;
+        margin: 10px 0 30px 0;
+        padding: 0;
+        color: #152456;
+      }
+      .locations__intro p {
+        font-size: 18px;
+        line-height: 1.5em;
+        margin: 20px 0 20px 0;
+      }
+      .locations-menu {
+        height: 500px;
+        background-color: #f2f4f8;
+      }
+      .locations-menu__tab {
+        height: 50px;
+      }
+      .locations-menu__tab > h3 {
+        position: relative;
+        line-height: 49px;
+        font-size: 16px;
+        font-weight: bold;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+        background-color: #152456;
+        color: #fff;
+        margin: 0;
+        padding: 0 0 0 50px;
+        cursor: pointer;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+      }
+      .locations-menu__tab > h3::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        transform: translateY(-50%);
+        box-sizing: border-box;
+        display: inline-block;
+        height: 20px;
+        width: 20px;
+        border-radius: 10px;
+        border: 6px solid #569bca;
+        padding: 0;
+      }
+      .locations-menu__tab > h3::after {
+        content: '';
+        position: absolute;
+        top: 45%;
+        right: 15px;
+        transform: translateY(-50%) rotate(45deg);
+        box-sizing: border-box;
+        display: inline-block;
+        height: 10px;
+        width: 10px;
+        border: solid #569bca;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+      }
+      .locations-menu__tab > h3:hover {
+        background-color: #000222;
+        color: #569bca;
+      }
+      .locations-menu__panel.is-active .locations-menu__tab > h3 {
+        line-height: 50px;
+        border: 0;
+      }
+      .locations-menu__panel.is-active .locations-menu__options {
+        display: block;
+      }
+      .locations-menu__panel.is-active .locations-menu__tab > h3::after {
+        opacity: 0.2;
+      }
+      .locations-menu__panel--hospitals .locations-menu__tab > h3::before {
+        border-color: #569bca;
+      }
+      .locations-menu__panel--outpatient .locations-menu__tab > h3::before {
+        border-color: orange;
+      }
+      .locations-menu__panel--urgentcare .locations-menu__tab > h3::before {
+        border-color: purple;
+      }
+      .locations-menu__options {
+        height: 350px;
+        padding: 20px;
+        border: 1px solid #999;
+        overflow-y: scroll;
+        background-color: #fff;
+        display: none;
+        transition: ease .5s;
+      }
+      .locations-menu__list {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      .locations-menu__list li {
+        font-size: 16px;
+        margin: 0 0 1.3em 0;
+        padding: 0 0 1em 0;
+        border-bottom: 1px solid #ccc;
+      }
+      .locations-menu__list li:last-of-type {
+        margin: 0;
+      }
+      .locations__map {
+        width: 100%;
+        height: 350px;
+        margin-top: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="locations">
+      <div class="locations__main">
+        <div class="locations__intro">
+          <h2>Our Care Network</h2>
+          <p>Jefferson Health offers an extensive care network with offices throughout Pennsylvania, New Jersey and Delaware. Use the directory and map to find the best location for you including detailed driving directions and further information about services available at each of our offices.</p>
+        </div>
+        <div class="locations__map">
+          <div id="map"></div>
+        </div>
+      </div>
+      <div class="locations__sidebar">
+        <div class="locations-menu">
+          <div class="locations-menu__panel locations-menu__panel--hospitals is-active">
+            <div class="locations-menu__tab">
+              <h3>Hospitals</h3>
+            </div>
+            <div class="locations-menu__options">
+              <ul class="locations-menu__list">
+                <li>Abington Hospital</li>
+                <li>Abington - Lansdale Hospital</li>
+                <li>Thomas Jefferson University Hospital</li>
+                <li>Jefferson Hospital for Neuroscience</li>
+                <li>Methodist Hospital</li>
+                <li>Aria − Bucks County Hospital</li>
+                <li>Aria – Frankford Hospital</li>
+                <li>Aria – Torresdale Hospital</li>
+                <li>Rothman Orthopaedic Specialty Hospital – Bensalem</li>
+                <li>Kennedy University Hospital - Cherry Hill</li>
+                <li>Kennedy University Hospital - Stratford</li>
+                <li>Kennedy University Hospital - Washington Township</li>
+              </ul>
+            </div>
+          </div>
+          <div class="locations-menu__panel locations-menu__panel--outpatient">
+            <div class="locations-menu__tab">
+              <h3>Outpatient</h3>
+            </div>
+            <div class="locations-menu__options">
+              <ul class="locations-menu__list">
+                <li>Abington Jefferson Health – Blue Bell</li>
+                <li>Abington Jefferson Health – Lower Gwynedd</li>
+                <li>Abington Jefferson Health – Montgomeryville</li>
+                <li>Abington Jefferson Health – Warminster</li>
+                <li>Abington Jefferson Health – Willow Grove</li>
+                <li>Jefferson - Bala Cynwyd</li>
+                <li>Jefferson - Bala Cynwyd</li>
+                <li>Jefferson Health - Smylie Times</li>
+                <li>Jefferson Health - Navy Yard</li>
+                <li>Jefferson Health - Turnersville</li>
+                <li>Jefferson Health - Voorhees</li>
+                <li>The Annex</li>
+                <li>The Professional Court</li>
+                <li>Aria Health – Center for Rehabilitation and Wellness</li>
+                <li>Jefferson Health - Burlington</li>
+                <li>Abington Jefferson Health – Elkins Park</li>
+                <li>Jefferson Health – Art Museum</li>
+              </ul>
+            </div>
+          </div>
+          <div class="locations-menu__panel locations-menu__panel--urgentcare">
+            <div class="locations-menu__tab">
+              <h3>Urgent Care</h3>
+            </div>
+            <div class="locations-menu__options">
+              <ul class="locations-menu__list">
+                <li>Jefferson Urgent Care – Flourtown</li>
+                <li>Jefferson Urgent Care - Rittenhouse</li>
+                <li>Jefferson Urgent Care – Smylie Times</li>
+                <li>Jefferson Urgent Care – Washington Square</li>
+                <li>Jefferson Urgent Care – Bensalem</li>
+                <li>Jefferson Urgent Care – Grant Avenue</li>
+                <li>Jefferson Urgent Care – Willow Grove</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+    function initMap() {
+
+      // initalize map
+      var map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 40.0556365, lng: -74.9905356},
+        zoom: 10,
+        minZoom: 9,
+        maxZoom: 16,
+        mapTypeControl: false,
+        streetViewControl: false,
+        styles: [{'featureType':'administrative','elementType':'labels.text.fill','stylers':[{'color':'#152456'}]},{'featureType':'administrative.neighborhood','elementType':'labels.text.fill','stylers':[{'color':'#569bca'}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#f2f4f8'}]},{'featureType':'landscape','elementType':'geometry.fill','stylers':[{'color':'#ffffff'}]},{'featureType':'poi','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'poi.park','elementType':'geometry.fill','stylers':[{'color':'#e6f3d6'},{'visibility':'on'}]},{'featureType':'road','elementType':'all','stylers':[{'saturation':-30},{'lightness':45},{'visibility':'simplified'}]},{'featureType':'road','elementType':'geometry.fill','stylers':[{'color':'#f2f4f8'}]},{'featureType':'road.highway','elementType':'all','stylers':[{'visibility':'simplified'}]},{'featureType':'road.highway','elementType':'geometry.fill','stylers':[{'color':'#cccccc'},{'visibility':'simplified'}]},{'featureType':'road.highway','elementType':'labels.text','stylers':[{'color':'#333333'}]},{'featureType':'road.arterial','elementType':'geometry.fill','stylers':[{'color':'#f4f4f4'}]},{'featureType':'road.arterial','elementType':'labels.text.fill','stylers':[{'color':'#787878'}]},{'featureType':'road.arterial','elementType':'labels.icon','stylers':[{'visibility':'off'}]},{'featureType':'transit','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#eaf6f8'},{'visibility':'on'}]},{'featureType':'water','elementType':'geometry.fill','stylers':[{'color':'#addbf9'}]}]
+      });
+
+      // set up UI
+      var locationsMenu = document.getElementsByClassName('locations-menu')[0];
+      var locationsPanels = locationsMenu.getElementsByClassName('locations-menu__panel');
+
+      for (var i = 0; i < locationsPanels.length; i++) {
+        var tab = locationsPanels[i].getElementsByClassName('locations-menu__tab')[0];
+        tab.addEventListener('click', function() {
+          var parentnode = this.parentNode;
+          if (parentnode.className.indexOf('is-active') === -1) {
+             var activepanel = parentnode.parentNode.querySelectorAll('.locations-menu__panel.is-active');
+             if (activepanel.length) {
+               activepanel[0].classList.remove('is-active');
+             }
+             parentnode.className += ' is-active';
+          }
+        });
+      }
+
+      // elementsUI.header.addEventListener('click', function() {
+      //   var allLocationCards = document.getElementsByClassName('locations-card');
+      //   for (var i = 0; i < allLocationCards.length; i++) {
+      //     if (allLocationCards[i] === element) {
+      //       if (allLocationCards[i].className.indexOf('is-active') === -1) {
+      //         allLocationCards[i].className += ' is-active';
+      //       }
+      //     } else {
+      //       allLocationCards[i].classList.remove('is-active');
+      //     }
+      //   }
+      // });
+
+    }
+    </script>
+<!--
+        <div class="locations-cards-container">
+          <div class="locations-cards">
+            <div class="locations-card hospital-list is-active">
+              <div class="location-panel">
+                <div class="locations-panel-header">
+                  <h2>Hospitals</h2>
+                </div>
+                <div class="locations-panel-body">
+                  <div class="locations-panel-info">
+                    <div class="info-links">
+                      <a href="#">Get Directions</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#">View Location</a>
+                    </div>
+                  </div>
+                  <div class="locations-panel-list">
+                    <ul class="locations-list-ui"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="locations-card outpatient-list" style="height: auto;">
+              <div class="location-panel">
+                <div class="locations-panel-header">
+                  <h2>Outpatient</h2>
+                </div>
+                <div class="locations-panel-body">
+                  <div class="locations-panel-desc">
+                    <p>Jefferson Health offers an extensive care network with offices throughout Pennsylvania, New Jersey and Delaware.</p>
+                  </div>
+                  <div class="locations-panel-info">
+                  </div>
+                  <div class="locations-panel-list">
+                    <ul class="locations-list-ui"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="locations-card urgentcare-list" style="height: auto;">
+              <div class="location-panel">
+                <div class="locations-panel-header">
+                  <h2>Urgent Care</h2>
+                </div>
+                <div class="locations-panel-body">
+                  <div class="locations-panel-desc">
+                    <p>Jefferson Health offers an extensive care network with offices throughout Pennsylvania, New Jersey and Delaware.</p>
+                  </div>
+                  <div class="locations-panel-info">
+                  </div>
+                  <div class="locations-panel-list">
+                    <ul class="locations-list-ui"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+-->
+
+
+
+
+    <!-- <script>
+    function initMap() {
+      //var locationCard = document.getElementsByClassName('location-card')[0];
+      var startCoords = {lat: 39.9425448, lng: -75.1278647};
+      var startZoom = 11;
+
+      // list of hospital locations
+      var locations = [
+        {
+        	name: "Abington Hospital",
+        	lat: 40.119136,
+        	lng: -75.119953,
+          category: 'hospital',
+          url: '',
+          address: '1200 Old York Rd.<br />Abington, PA 19001',
+          phone: '215-481-2000',
+          hours: ''
+        },
+        {
+        	name: "Abington - Lansdale Hospital",
+        	lat: 40.25115,
+        	lng: -75.271454,
+          category: 'hospital'
+        },
+        {
+        	name: "Thomas Jefferson University Hospital",
+        	lat: 39.9498262,
+        	lng: -75.1584227,
+          category: 'hospital'
+        },
+        {
+        	name: "Jefferson Hospital for Neuroscience",
+        	lat: 39.9480344,
+        	lng: -75.156207,
+          category: 'hospital'
+        },
+        {
+        	name: "Methodist Hospital",
+        	lat: 39.921183,
+        	lng: -75.169701,
+          category: 'hospital'
+        },
+        {
+        	name: "Aria − Bucks County Hospital",
+        	lat: 40.1830928,
+        	lng: -74.8725508,
+          category: 'hospital'
+        },
+        {
+        	name: "Aria – Frankford Hospital",
+        	lat: 40.0196895,
+        	lng: -75.0838933,
+          category: 'hospital'
+        },
+        {
+        	name: "Aria – Torresdale Hospital",
+        	lat: 40.0716736,
+        	lng: -74.9854092,
+          category: 'hospital'
+        },
+        {
+        	name: "Rothman Orthopaedic Specialty Hospital – Bensalem",
+        	lat: 40.1129362,
+        	lng: -74.9627666,
+          category: 'hospital'
+        },
+        {
+        	name: "Kennedy University Hospital - Cherry Hill",
+        	lat: 39.927982,
+        	lng: -75.015943,
+          category: 'hospital'
+        },
+        {
+        	name: "Kennedy University Hospital - Stratford",
+        	lat: 39.828275,
+        	lng: -75.008195,
+          category: 'hospital'
+        },
+        {
+        	name: "Kennedy University Hospital - Washington Township",
+        	lat: 39.735239,
+        	lng: -75.065340,
+          category: 'hospital'
+        }
+      ];
+
+      // list of outpatient locations
+      var outpatientLocations = [
+        {
+        	name: "Abington Jefferson Health – Blue Bell",
+        	lat: 40.140623,
+        	lng: -75.285922,
+          category: 'outpatient'
+        },
+        {
+        	name: "Abington Jefferson Health – Lower Gwynedd",
+        	lat: 40.17472,
+        	lng: -75.22517,
+          category: 'outpatient'
+        },
+        {
+        	name: "Abington Jefferson Health – Montgomeryville",
+        	lat: 40.2391667,
+        	lng: -75.2315047,
+          category: 'outpatient'
+        },
+        {
+        	name: "Abington Jefferson Health – Warminster",
+        	lat: 40.185092,
+        	lng: -75.078765,
+          category: 'outpatient'
+        },
+        {
+        	name: "Abington Jefferson Health – Willow Grove",
+        	lat: 40.164239,
+        	lng: -75.1310205,
+          category: 'outpatient'
+        },
+        {
+        	name: "Jefferson - Bala Cynwyd",
+        	lat: 40.0050928,
+        	lng: -75.2192039,
+          category: 'outpatient'
+        },
+        {
+        	name: "Jefferson - Bala Cynwyd",
+        	lat: 39.9998876,
+        	lng: -75.2303063,
+          category: 'outpatient'
+        },
+        {
+        	name: "Jefferson Health - Smylie Times",
+        	lat: 40.0562602,
+        	lng: -75.0452195,
+          category: 'outpatient'
+        },
+        {
+        	name: "Jefferson Health - Navy Yard",
+        	lat: 39.8959772,
+        	lng: -75.1740603,
+          category: 'outpatient'
+        },
+        {
+        	name: "Jefferson Health - Turnersville",
+        	lat: 39.7370413,
+        	lng: -75.0468679,
+          category: 'outpatient'
+        },
+        {
+        	name: "Jefferson Health - Voorhees",
+        	lat: 39.844291,
+        	lng: -74.985362,
+          category: 'outpatient'
+        },
+        {
+        	name: "The Annex",
+        	lat: 40.080427,
+        	lng: -75.02851,
+          category: 'outpatient'
+        },
+        {
+        	name: "The Professional Court",
+        	lat: 40.1098113,
+        	lng: -75.0309162,
+          category: 'outpatient'
+        },
+        {
+        	name: "Aria Health – Center for Rehabilitation and Wellness",
+        	lat: 40.1834393,
+        	lng: -74.8680713,
+          category: 'outpatient'
+        },
+        {
+        	name: "Jefferson Health - Burlington",
+        	lat: 40.0492141,
+        	lng: -74.8707033,
+          category: 'outpatient'
+        },
+        {
+        	name: "Abington Jefferson Health – Elkins Park",
+        	lat: 40.082393,
+        	lng: -75.1279097,
+          category: 'outpatient'
+        },
+        {
+        	name: "Jefferson Health – Art Museum",
+        	lat: 39.963721,
+        	lng: -75.173739,
+          category: 'outpatient'
+        }
+      ];
+
+      // list of urgent care locations
+      var urgentcareLocations = [
+        {
+        	name: "Jefferson Urgent Care – Flourtown",
+        	lat: 40.111191,
+        	lng: -75.210331,
+          category: 'urgent'
+        },
+        {
+        	name: "Jefferson Urgent Care - Rittenhouse",
+        	lat: 39.9521761,
+        	lng: -75.1765097,
+          category: 'urgent'
+        },
+        {
+        	name: "Jefferson Urgent Care – Smylie Times",
+        	lat: 40.0562602,
+        	lng: -75.0452195,
+          category: 'urgent'
+        },
+        {
+        	name: "Jefferson Urgent Care – Washington Square",
+        	lat: 39.9479655,
+        	lng: -75.1532154,
+          category: 'urgent'
+        },
+        {
+        	name: "Jefferson Urgent Care – Bensalem",
+        	lat: 40.1132751,
+        	lng: -74.9587764,
+          category: 'urgent'
+        },
+        {
+        	name: "Jefferson Urgent Care – Grant Avenue",
+        	lat: 40.080427,
+        	lng: -75.02851,
+          category: 'urgent'
+        },
+        {
+        	name: "Jefferson Urgent Care – Willow Grove",
+        	lat: 40.1688489,
+        	lng: -75.1262753,
+          category: 'urgent'
+        }
+      ];
+
+      // initalize map
+      var map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 40.0556365, lng: -74.9905356},
+        zoom: 10,
+        minZoom: 9,
+        maxZoom: 16,
+        mapTypeControl: false,
+        streetViewControl: false,
+        styles: [{'featureType':'administrative','elementType':'labels.text.fill','stylers':[{'color':'#152456'}]},{'featureType':'administrative.neighborhood','elementType':'labels.text.fill','stylers':[{'color':'#569bca'}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#f2f4f8'}]},{'featureType':'landscape','elementType':'geometry.fill','stylers':[{'color':'#ffffff'}]},{'featureType':'poi','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'poi.park','elementType':'geometry.fill','stylers':[{'color':'#e6f3d6'},{'visibility':'on'}]},{'featureType':'road','elementType':'all','stylers':[{'saturation':-30},{'lightness':45},{'visibility':'simplified'}]},{'featureType':'road','elementType':'geometry.fill','stylers':[{'color':'#f2f4f8'}]},{'featureType':'road.highway','elementType':'all','stylers':[{'visibility':'simplified'}]},{'featureType':'road.highway','elementType':'geometry.fill','stylers':[{'color':'#cccccc'},{'visibility':'simplified'}]},{'featureType':'road.highway','elementType':'labels.text','stylers':[{'color':'#333333'}]},{'featureType':'road.arterial','elementType':'geometry.fill','stylers':[{'color':'#f4f4f4'}]},{'featureType':'road.arterial','elementType':'labels.text.fill','stylers':[{'color':'#787878'}]},{'featureType':'road.arterial','elementType':'labels.icon','stylers':[{'visibility':'off'}]},{'featureType':'transit','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#eaf6f8'},{'visibility':'on'}]},{'featureType':'water','elementType':'geometry.fill','stylers':[{'color':'#addbf9'}]}]
+      });
+
+      function locationCardUI(list, element) {
+
+        // UI elements
+        var elementsUI = {
+          'list': element.getElementsByClassName('locations-list-ui')[0],
+          'info': element.getElementsByClassName('locations-panel-info')[0],
+          'header': element.getElementsByClassName('locations-panel-header')[0]
+        };
+
+        elementsUI.header.addEventListener('click', function() {
+          var allLocationCards = document.getElementsByClassName('locations-card');
+          for (var i = 0; i < allLocationCards.length; i++) {
+            if (allLocationCards[i] === element) {
+              if (allLocationCards[i].className.indexOf('is-active') === -1) {
+                allLocationCards[i].className += ' is-active';
+              }
+            } else {
+              allLocationCards[i].classList.remove('is-active');
+            }
+          }
+        });
+
+        // create UI for location listings
+        for (var i = 0; i < list.length; i++) {
+          var el = document.createElement('LI');
+          el.innerHTML = list[i].name;
+
+          var locationInfoBox = '<div class="location-info-box">' +
+            '<h3>' + list[i].name + '</h3>' +
+            '<p>' + list[i].address + '</p>' +
+            '<p>' + '<span>Phone:</span><br />' + list[i].phone + '</p>' +
+            '</div>';
+
+          // closure used to address loop scope issue
+          el.addEventListener('click', (function(index, element, content) {
+            return function() {
+              map.setOptions({
+                center: {lat: list[index].lat, lng: list[index].lng},
+                zoom: 15
+              });
+              element.innerHTML = content;
+            };
+          }(i, elementsUI.info, locationInfoBox)));
+
+          elementsUI.list.appendChild(el);
+        }
+
+        // list of marker objects
+        //var markers = [];
+
+        // create a map marker for each location
+        for (var i = 0; i < list.length; i++) {
+          // store new marker in list
+          var marker = new google.maps.Marker({
+            position: {lat: list[i].lat, lng: list[i].lng},
+            map: map,
+            animation: google.maps.Animation.DROP,
+
+            // custom properties
+            location_id: i
+          });
+          marker.addListener('click', function() {
+            map.setOptions({
+              center: this.position,
+              zoom: 15
+            });
+          });
+          //markers.push(marker);
+        }
+      }
+
+      var hospitalLocationCard    = new locationCardUI(locations, document.getElementsByClassName('locations-card')[0]);
+      var outpatientLocationCard  = new locationCardUI(outpatientLocations, document.getElementsByClassName('locations-card')[1]);
+      var urgentcareLocationCard  = new locationCardUI(urgentcareLocations, document.getElementsByClassName('locations-card')[2]);
+
+
+      //
+      // var locationsListUI = document.getElementsByClassName('locations-list-ui')[0];
+      //
+      // var locationsPanelInfo = document.getElementsByClassName('locations-panel-info')[0];
+      //
+      // // list of location info boxes
+      // var locationInfoBoxes = [];
+      //
+      // for (var i = 0; i < locations.length; i++) {
+      //   var el = document.createElement('LI');
+      //   el.innerHTML = locations[i].name;
+      //
+      //   var locationInfoBox = '<div class="location-info-box">' +
+      //     '<h3>' + locations[i].name + '</h3>' +
+      //     '<p>' + 'Address:<br />Phone:<br />' + '</p>'
+      //     '</div>';
+      //
+      //   // closure used to address loop scope issue
+      //   el.addEventListener('click', (function(i, locationsPanelInfo, locationInfoBox) {
+      //     return function() {
+      //       map.setOptions({
+      //         center: {lat: locations[i].lat, lng: locations[i].lng},
+      //         zoom: 14
+      //       });
+      //       locationsPanelInfo.innerHTML = locationInfoBox;
+      //     };
+      //   }(i, locationsPanelInfo, locationInfoBox)));
+      //
+      //   locationsListUI.appendChild(el);
+      // }
+
+
+
+
+
+
+    }
+    </script> -->
+    <!--<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>-->
+    <!-- Jefferson API Key: AIzaSyAdXlaNoumqLdoV5BNGvKes613OO_Zcdyw -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3Ljo3gaxiAY83sPabqHZCa7_GFA7a9Jg&callback=initMap" async defer></script>
+  </body>
+</html>
