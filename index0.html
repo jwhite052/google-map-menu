@@ -167,18 +167,24 @@
       }
       .locations__main {
         float: left;
-        width: calc(100% - 300px);
-        padding: 0 30px 0 0;
-      }
-      .locations__main::after {
-        content: '';
-        display: table;
-        clear: both;
+        width: 70%;
+        padding-right: 30px;
       }
       .locations__sidebar {
-        padding: 0;
+        padding: 70px 0 0 0;
         float: left;
-        width: calc(300px);
+        width: 30%;
+      }
+      .locations__intro > h2 {
+        font-size: 36px;
+        margin: 10px 0 30px 0;
+        padding: 0;
+        color: #152456;
+      }
+      .locations__intro p {
+        font-size: 18px;
+        line-height: 1.5em;
+        margin: 20px 0 20px 0;
       }
       .locations-menu {
         height: 500px;
@@ -284,101 +290,17 @@
       }
       .locations__map {
         width: 100%;
-        height: 400px;
-      }
-      .locations__search {
-
-      }
-      .locations__header {
-        padding-bottom: 50px;
-      }
-      .locations__header::after {
-        content: '';
-        display: table;
-        clear: both;
-      }
-      .locations__title {
-        float: left;
-        width: calc(250px);
-      }
-      .locations__title > h2 {
-        font-size: 48px;
-        font-weight: normal;
-        margin: 0;
-        padding: 0;
-        color: #569bca;
-        line-height: 1.0em;
-      }
-      .locations__intro {
-        float: left;
-        width: calc(100% - 250px);
-        padding-top: 10px;
-      }
-      .locations__intro p {
-        font-size: 18px;
-        line-height: 1.5em;
-        margin: 0;
-        padding: 0;
-      }
-      .locations__search {
-        padding: 20px 0;
-      }
-      .search-locations input,
-      .search-locations select {
-        font-size: 18px;
-        margin: 10px 15px 0 0;
-        border-radius: 0;
-      }
-      .search-locations__address {
-        height: 40px;
-        width: 300px;
-      }
-      .search-locations__distance {
-        height: 40px;
-      }
-      .search-locations__region {
-        height: 40px;
-        margin: 0 20px 0 0;
-      }
-      .search-locations__type {
-        height: 40px;
+        height: 350px;
+        margin-top: 40px;
       }
     </style>
   </head>
   <body>
     <div class="locations">
-      <div class="locations__header">
-        <div class="locations__title">
-          <h2>Our Care <strong>Network</strong></h2>
-        </div>
-        <div class="locations__intro">
-          <p>Jefferson Health offers an extensive care network with offices throughout Pennsylvania, New Jersey and Delaware. Use the directory and map to find the best location for you including detailed driving directions and further information about services available at each of our offices.</p>
-        </div>
-      </div>
       <div class="locations__main">
-        <div class="locations__search">
-          <div class="search-locations">
-            <input class="search-locations__address" type="text" placeholder="Address" />
-            <select class="search-locations__distance">
-              <option class="default">All</option>
-              <option>5mi</option>
-              <option>10mi</option>
-              <option>25mi</option>
-            </select>
-            <select class="search-locations__region">
-              <option value="default">All</option>
-              <option value="philadelphia">Philadelphia</option>
-              <option value="montgomery">Montgomery County</option>
-              <option value="bucks">Bucks County</option>
-              <option value="jersey">South Jersey</option>
-            </select>
-            <select class="search-locations__type">
-              <option value="default">All</option>
-              <option value="hospitals">Hospitals</option>
-              <option value="outpatient">Outpatient</option>
-              <option value="urgent">Urgent Care</option>
-            </select>
-          </div>
+        <div class="locations__intro">
+          <h2>Our Care Network</h2>
+          <p>Jefferson Health offers an extensive care network with offices throughout Pennsylvania, New Jersey and Delaware. Use the directory and map to find the best location for you including detailed driving directions and further information about services available at each of our offices.</p>
         </div>
         <div class="locations__map">
           <div id="map"></div>
@@ -457,6 +379,16 @@
     <script>
     function initMap() {
 
+      // initalize map
+      var map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 40.0556365, lng: -74.9905356},
+        zoom: 10,
+        minZoom: 9,
+        maxZoom: 16,
+        mapTypeControl: false,
+        streetViewControl: false
+      });
+
       // cache UI elements
       var menu = document.getElementsByClassName('locations-menu')[0];
       var menuTabs = menu.querySelectorAll('.locations-menu__panel > .locations-menu__tab');
@@ -495,724 +427,260 @@
         }
       };
 
-      // attach listener to each menu tab
       for (var i = 0; i < menuTabs.length; i++) {
         menuTabs[i].addEventListener('click', expandMenu, false);
       }
 
-      var mapdefaults = {
-        center: {lat: 40.0556365, lng: -74.9905356},
-        zoom: 10
-      }
-
-      // initalize map
-      var map = new google.maps.Map(document.getElementById('map'), {
-        center: mapdefaults.center,
-        zoom: mapdefaults.zoom,
-        minZoom: 9,
-        maxZoom: 16,
-        mapTypeControl: false,
-        streetViewControl: false,
-        clickableIcons: false
-      });
-
       // Model
       var hospitalsList = [
         {
-          name: "Abington Hospital",
-          map: {
-            lat: 40.119136,
-            lng: -75.119953
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'montgomery'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Abington Hospital",
+        	lat: 40.119136,
+        	lng: -75.119953,
+          category: 'hospital',
+          url: '',
+          address: '1200 Old York Rd.<br />Abington, PA 19001',
+          phone: '215-481-2000',
+          hours: ''
         },
         {
-          name: "Abington - Lansdale Hospital",
-          map: {
-            lat: 40.25115,
-            lng: -75.271454
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'montgomery'
-          },
-          info: {
-            name: "Abington - Lansdale Hospital",
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Abington - Lansdale Hospital",
+        	lat: 40.25115,
+        	lng: -75.271454,
+          category: 'hospital'
         },
         {
-          name: "Thomas Jefferson University Hospital",
-          map: {
-            lat: 39.9498262,
-            lng: -75.1584227
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Thomas Jefferson University Hospital",
+        	lat: 39.9498262,
+        	lng: -75.1584227,
+          category: 'hospital'
         },
         {
-          name: "Jefferson Hospital for Neuroscience",
-          map: {
-            lat: 39.9480344,
-            lng: -75.156207
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Hospital for Neuroscience",
+        	lat: 39.9480344,
+        	lng: -75.156207,
+          category: 'hospital'
         },
         {
-          name: "Methodist Hospital",
-          map: {
-            lat: 39.921183,
-            lng: -75.169701
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Methodist Hospital",
+        	lat: 39.921183,
+        	lng: -75.169701,
+          category: 'hospital'
         },
         {
-          name: "Aria − Bucks County Hospital",
-          map: {
-            lat: 40.1830928,
-            lng: -74.8725508
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'bucks'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Aria − Bucks County Hospital",
+        	lat: 40.1830928,
+        	lng: -74.8725508,
+          category: 'hospital'
         },
         {
-          name: "Aria – Frankford Hospital",
-          map: {
-            lat: 40.0196895,
-            lng: -75.0838933
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Aria – Frankford Hospital",
+        	lat: 40.0196895,
+        	lng: -75.0838933,
+          category: 'hospital'
         },
         {
-          name: "Aria – Torresdale Hospital",
-          map: {
-            lat: 40.0716736,
-            lng: -74.9854092
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Aria – Torresdale Hospital",
+        	lat: 40.0716736,
+        	lng: -74.9854092,
+          category: 'hospital'
         },
         {
-          name: "Rothman Orthopaedic Specialty Hospital – Bensalem",
-          map: {
-            lat: 40.1129362,
-            lng: -74.9627666
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'bucks'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Rothman Orthopaedic Specialty Hospital – Bensalem",
+        	lat: 40.1129362,
+        	lng: -74.9627666,
+          category: 'hospital'
         },
         {
-          name: "Kennedy University Hospital - Cherry Hill",
-          map: {
-            lat: 39.927982,
-            lng: -75.015943
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'jersey'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Kennedy University Hospital - Cherry Hill",
+        	lat: 39.927982,
+        	lng: -75.015943,
+          category: 'hospital'
         },
         {
-          name: "Kennedy University Hospital - Stratford",
-          map: {
-            lat: 39.828275,
-            lng: -75.008195
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'jersey'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Kennedy University Hospital - Stratford",
+        	lat: 39.828275,
+        	lng: -75.008195,
+          category: 'hospital'
         },
         {
-          name: "Kennedy University Hospital - Washington Township",
-          map: {
-            lat: 39.735239,
-            lng: -75.065340
-          },
-          tags: {
-            type: 'hospitals',
-            region: 'jersey'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Kennedy University Hospital - Washington Township",
+        	lat: 39.735239,
+        	lng: -75.065340,
+          category: 'hospital'
         }
       ];
 
       var outpatientList = [
         {
-          name: "Abington Jefferson Health – Blue Bell",
-          map: {
-            lat: 40.140623,
-            lng: -75.285922
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'montgomery'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Abington Jefferson Health – Blue Bell",
+        	lat: 40.140623,
+        	lng: -75.285922,
+          category: 'outpatient'
         },
         {
-          name: "Abington Jefferson Health – Lower Gwynedd",
-          map: {
-            lat: 40.17472,
-            lng: -75.22517
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'montgomery'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Abington Jefferson Health – Lower Gwynedd",
+        	lat: 40.17472,
+        	lng: -75.22517,
+          category: 'outpatient'
         },
         {
-          name: "Abington Jefferson Health – Montgomeryville",
-          map: {
-            lat: 40.2391667,
-            lng: -75.2315047
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'montgomery'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Abington Jefferson Health – Montgomeryville",
+        	lat: 40.2391667,
+        	lng: -75.2315047,
+          category: 'outpatient'
         },
         {
-          name: "Abington Jefferson Health – Warminster",
-          map: {
-            lat: 40.185092,
-            lng: -75.078765
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'bucks'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Abington Jefferson Health – Warminster",
+        	lat: 40.185092,
+        	lng: -75.078765,
+          category: 'outpatient'
         },
         {
-          name: "Abington Jefferson Health – Willow Grove",
-          map: {
-            lat: 40.164239,
-            lng: -75.1310205
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'montgomery'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Abington Jefferson Health – Willow Grove",
+        	lat: 40.164239,
+        	lng: -75.1310205,
+          category: 'outpatient'
         },
         {
-          name: "Jefferson - Bala Cynwyd",
-          map: {
-            lat: 40.0050928,
-            lng: -75.2192039
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'montgomery'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson - Bala Cynwyd",
+        	lat: 40.0050928,
+        	lng: -75.2192039,
+          category: 'outpatient'
         },
         {
-          name: "Jefferson - Bala Cynwyd",
-          map: {
-            lat: 39.9998876,
-            lng: -75.2303063
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'montgomery'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson - Bala Cynwyd",
+        	lat: 39.9998876,
+        	lng: -75.2303063,
+          category: 'outpatient'
         },
         {
-          name: "Jefferson Health - Smylie Times",
-          map: {
-            lat: 40.0562602,
-            lng: -75.0452195
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Health - Smylie Times",
+        	lat: 40.0562602,
+        	lng: -75.0452195,
+          category: 'outpatient'
         },
         {
-          name: "Jefferson Health - Navy Yard",
-          map: {
-            lat: 39.8959772,
-            lng: -75.1740603
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Health - Navy Yard",
+        	lat: 39.8959772,
+        	lng: -75.1740603,
+          category: 'outpatient'
         },
         {
-          name: "Jefferson Health - Turnersville",
-          map: {
-            lat: 39.7370413,
-            lng: -75.0468679
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'montgomery'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Health - Turnersville",
+        	lat: 39.7370413,
+        	lng: -75.0468679,
+          category: 'outpatient'
         },
         {
-          name: "Jefferson Health - Voorhees",
-          map: {
-            lat: 39.844291,
-            lng: -74.985362
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'jersey'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Health - Voorhees",
+        	lat: 39.844291,
+        	lng: -74.985362,
+          category: 'outpatient'
         },
         {
-          name: "The Annex",
-          map: {
-            lat: 40.080427,
-            lng: -75.02851
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "The Annex",
+        	lat: 40.080427,
+        	lng: -75.02851,
+          category: 'outpatient'
         },
         {
-          name: "The Professional Court",
-          map: {
-            lat: 40.1098113,
-            lng: -75.0309162
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "The Professional Court",
+        	lat: 40.1098113,
+        	lng: -75.0309162,
+          category: 'outpatient'
         },
         {
-          name: "Aria Health – Center for Rehabilitation and Wellness",
-          map: {
-            lat: 40.1834393,
-            lng: -74.8680713
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'bucks'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Aria Health – Center for Rehabilitation and Wellness",
+        	lat: 40.1834393,
+        	lng: -74.8680713,
+          category: 'outpatient'
         },
         {
-          name: "Jefferson Health - Burlington",
-          map: {
-            lat: 40.0492141,
-            lng: -74.8707033
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'jersey'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Health - Burlington",
+        	lat: 40.0492141,
+        	lng: -74.8707033,
+          category: 'outpatient'
         },
         {
-          name: "Abington Jefferson Health – Elkins Park",
-          map: {
-            lat: 40.082393,
-            lng: -75.1279097
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'montgomery'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Abington Jefferson Health – Elkins Park",
+        	lat: 40.082393,
+        	lng: -75.1279097,
+          category: 'outpatient'
         },
         {
-          name: "Jefferson Health – Art Museum",
-          map: {
-            lat: 39.963721,
-            lng: -75.173739
-          },
-          tags: {
-            type: 'outpatient',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Health – Art Museum",
+        	lat: 39.963721,
+        	lng: -75.173739,
+          category: 'outpatient'
         }
       ];
 
       var urgentcareList = [
         {
-          name: "Jefferson Urgent Care – Flourtown",
-          map: {
-            lat: 40.111191,
-            lng: -75.210331
-          },
-          tags: {
-            type: 'urgent',
-            region: 'montgomery'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Urgent Care – Flourtown",
+        	lat: 40.111191,
+        	lng: -75.210331,
+          category: 'urgent'
         },
         {
-          name: "Jefferson Urgent Care - Rittenhouse",
-          map: {
-            lat: 39.9521761,
-            lng: -75.1765097
-          },
-          tags: {
-            type: 'urgent',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Urgent Care - Rittenhouse",
+        	lat: 39.9521761,
+        	lng: -75.1765097,
+          category: 'urgent'
         },
         {
-          name: "Jefferson Urgent Care – Smylie Times",
-          map: {
-            lat: 40.0562602,
-            lng: -75.0452195
-          },
-          tags: {
-            type: 'urgent',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Urgent Care – Smylie Times",
+        	lat: 40.0562602,
+        	lng: -75.0452195,
+          category: 'urgent'
         },
         {
-          name: "Jefferson Urgent Care – Washington Square",
-          map: {
-            lat: 39.9479655,
-            lng: -75.1532154
-          },
-          tags: {
-            type: 'urgent',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Urgent Care – Washington Square",
+        	lat: 39.9479655,
+        	lng: -75.1532154,
+          category: 'urgent'
         },
         {
-          name: "Jefferson Urgent Care – Bensalem",
-          map: {
-            lat: 40.1132751,
-            lng: -74.9587764
-          },
-          tags: {
-            type: 'urgent',
-            region: 'bucks'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Urgent Care – Bensalem",
+        	lat: 40.1132751,
+        	lng: -74.9587764,
+          category: 'urgent'
         },
         {
-          name: "Jefferson Urgent Care – Grant Avenue",
-          map: {
-            lat: 40.080427,
-            lng: -75.02851
-          },
-          tags: {
-            type: 'urgent',
-            region: 'philadelphia'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Urgent Care – Grant Avenue",
+        	lat: 40.080427,
+        	lng: -75.02851,
+          category: 'urgent'
         },
         {
-          name: "Jefferson Urgent Care – Willow Grove",
-          map: {
-            lat: 40.1688489,
-            lng: -75.1262753
-          },
-          tags: {
-            type: 'urgent',
-            region: 'montgomery'
-          },
-          info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
-            directionsurl: '#'
-          }
+        	name: "Jefferson Urgent Care – Willow Grove",
+        	lat: 40.1688489,
+        	lng: -75.1262753,
+          category: 'urgent'
         }
       ];
 
       var infowindow = new google.maps.InfoWindow();
 
-      var markers = [];
-
       var initMarkers = function(list) {
         for (var i = 0; i < list.length; i++) {
           // store new marker in list
-          var markericon = 'blue-marker-icon.png';
-          if (list[i].tags.type === 'hospitals') {
-            markericon = 'blue-marker-icon.png';
-          } else if (list[i].tags.type === 'outpatient') {
-            markericon = 'purple-marker-icon.png';
-          } else if (list[i].tags.type === 'urgent') {
-            markericon = 'orange-marker-icon.png';
-          }
           var marker = new google.maps.Marker({
-            position: {lat: list[i].map.lat, lng: list[i].map.lng},
+            position: {lat: list[i].lat, lng: list[i].lng},
             map: map,
-            animation: google.maps.Animation.DROP,
-            icon: markericon,
+            animation: google.maps.Animation.DROP
             // custom properties
-            location: list[i]
           });
           marker.addListener('click', function() {
-            var content = '<h3>' + this.location.name + '</h3>' +
-            '<p>' + this.location.info.address + '<br />' +
-            '<a href="' + this.location.info.directionsurl + '" target="_blank">Get Directions</a></p>' +
-            '<p>' + this.location.info.phone + '</p>' +
-            '<p>' + this.location.info.hours + '</p>' +
-            '<p><a href="' + this.location.info.url + '" target="_blank">View Locations Page</a></p>';
-            infowindow.setContent(content);
+            infowindow.setContent('<h3>Location Name</h3><p>Info goes here</p>');
             infowindow.open(map, this);
             map.setOptions({
               center: this.position,
               zoom: 15
             });
           });
-          markers.push(marker);
+          //markers.push(marker);
         }
       };
 
@@ -1254,42 +722,6 @@
       setMenuMarkersUI(hospitalsList, menuUI.hospitals.list);
       setMenuMarkersUI(outpatientList, menuUI.outpatient.list);
       setMenuMarkersUI(urgentcareList, menuUI.urgentcare.list);
-
-      var searchFields = {
-        'address': document.getElementsByClassName('search-locations__address')[0],
-        'distance': document.getElementsByClassName('search-locations__distance')[0],
-        'region': document.getElementsByClassName('search-locations__region')[0],
-        'type': document.getElementsByClassName('search-locations__type')[0]
-      };
-
-      var currentMarkers = markers;
-
-      var updateMap = function() {
-        console.log("Changed!");
-        var region = document.getElementsByClassName('search-locations__region')[0].value;
-        var type = document.getElementsByClassName('search-locations__type')[0].value;
-
-        for (var i = 0; i < currentMarkers.length; i++) {
-          if ((currentMarkers[i].location.tags.region === region || region === "default") &&
-              (currentMarkers[i].location.tags.type === type || type === "default")) {
-            currentMarkers[i].setMap(map);
-          } else {
-            currentMarkers[i].setMap(null);
-          }
-        }
-      };
-
-      searchFields.address.addEventListener('keyup', function() {
-        if (this.value !== '') {
-          searchFields.distance.style.display = "none";
-        } else {
-          searchFields.distance.style.display = "inline-block";
-        }
-      });
-
-      // attach listeners to search fields
-      searchFields.region.addEventListener('change', updateMap);
-      searchFields.type.addEventListener('change', updateMap);
 
     } // end initMap()
     </script>
@@ -1366,8 +798,7 @@
         	name: "Abington Hospital",
         	lat: 40.119136,
         	lng: -75.119953,
-          type: 'hospitals',
-					region: 'bucks',
+          category: 'hospital',
           url: '',
           address: '1200 Old York Rd.<br />Abington, PA 19001',
           phone: '215-481-2000',
@@ -1377,78 +808,67 @@
         	name: "Abington - Lansdale Hospital",
         	lat: 40.25115,
         	lng: -75.271454,
-          type: 'hospitals',
-					region: 'bucks'
+          category: 'hospital'
         },
         {
         	name: "Thomas Jefferson University Hospital",
         	lat: 39.9498262,
         	lng: -75.1584227,
-          type: 'hospitals',
-					region: 'bucks'
+          category: 'hospital'
         },
         {
         	name: "Jefferson Hospital for Neuroscience",
         	lat: 39.9480344,
         	lng: -75.156207,
-          type: 'hospitals',
-					region: 'bucks'
+          category: 'hospital'
         },
         {
         	name: "Methodist Hospital",
         	lat: 39.921183,
         	lng: -75.169701,
-          type: 'hospitals',
-					region: 'bucks'
+          category: 'hospital'
         },
         {
         	name: "Aria − Bucks County Hospital",
         	lat: 40.1830928,
         	lng: -74.8725508,
-          type: 'hospitals',
-					region: 'bucks'
+          category: 'hospital'
         },
         {
         	name: "Aria – Frankford Hospital",
         	lat: 40.0196895,
         	lng: -75.0838933,
-          type: 'hospitals',
-					region: 'bucks'
+          category: 'hospital'
         },
         {
         	name: "Aria – Torresdale Hospital",
         	lat: 40.0716736,
         	lng: -74.9854092,
-          type: 'hospitals',
-					region: 'bucks'
+          category: 'hospital'
         },
         {
         	name: "Rothman Orthopaedic Specialty Hospital – Bensalem",
         	lat: 40.1129362,
         	lng: -74.9627666,
-          type: 'hospitals',
-					region: 'bucks'
+          category: 'hospital'
         },
         {
         	name: "Kennedy University Hospital - Cherry Hill",
         	lat: 39.927982,
         	lng: -75.015943,
-          type: 'hospitals',
-					region: 'bucks'
+          category: 'hospital'
         },
         {
         	name: "Kennedy University Hospital - Stratford",
         	lat: 39.828275,
         	lng: -75.008195,
-          type: 'hospitals',
-					region: 'bucks'
+          category: 'hospital'
         },
         {
         	name: "Kennedy University Hospital - Washington Township",
         	lat: 39.735239,
         	lng: -75.065340,
-          type: 'hospitals',
-					region: 'bucks'
+          category: 'hospital'
         }
       ];
 
@@ -1458,120 +878,103 @@
         	name: "Abington Jefferson Health – Blue Bell",
         	lat: 40.140623,
         	lng: -75.285922,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Abington Jefferson Health – Lower Gwynedd",
         	lat: 40.17472,
         	lng: -75.22517,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Abington Jefferson Health – Montgomeryville",
         	lat: 40.2391667,
         	lng: -75.2315047,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Abington Jefferson Health – Warminster",
         	lat: 40.185092,
         	lng: -75.078765,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Abington Jefferson Health – Willow Grove",
         	lat: 40.164239,
         	lng: -75.1310205,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Jefferson - Bala Cynwyd",
         	lat: 40.0050928,
         	lng: -75.2192039,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Jefferson - Bala Cynwyd",
         	lat: 39.9998876,
         	lng: -75.2303063,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Jefferson Health - Smylie Times",
         	lat: 40.0562602,
         	lng: -75.0452195,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Jefferson Health - Navy Yard",
         	lat: 39.8959772,
         	lng: -75.1740603,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Jefferson Health - Turnersville",
         	lat: 39.7370413,
         	lng: -75.0468679,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Jefferson Health - Voorhees",
         	lat: 39.844291,
         	lng: -74.985362,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "The Annex",
         	lat: 40.080427,
         	lng: -75.02851,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "The Professional Court",
         	lat: 40.1098113,
         	lng: -75.0309162,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Aria Health – Center for Rehabilitation and Wellness",
         	lat: 40.1834393,
         	lng: -74.8680713,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Jefferson Health - Burlington",
         	lat: 40.0492141,
         	lng: -74.8707033,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Abington Jefferson Health – Elkins Park",
         	lat: 40.082393,
         	lng: -75.1279097,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         },
         {
         	name: "Jefferson Health – Art Museum",
         	lat: 39.963721,
         	lng: -75.173739,
-          type: 'outpatient',
-					region: 'philadelphia'
+          category: 'outpatient'
         }
       ];
 
@@ -1581,50 +984,43 @@
         	name: "Jefferson Urgent Care – Flourtown",
         	lat: 40.111191,
         	lng: -75.210331,
-          type: 'urgent',
-					region: 'montgomery'
+          category: 'urgent'
         },
         {
         	name: "Jefferson Urgent Care - Rittenhouse",
         	lat: 39.9521761,
         	lng: -75.1765097,
-          type: 'urgent',
-					region: 'montgomery'
+          category: 'urgent'
         },
         {
         	name: "Jefferson Urgent Care – Smylie Times",
         	lat: 40.0562602,
         	lng: -75.0452195,
-          type: 'urgent',
-					region: 'montgomery'
+          category: 'urgent'
         },
         {
         	name: "Jefferson Urgent Care – Washington Square",
         	lat: 39.9479655,
         	lng: -75.1532154,
-          type: 'urgent',
-					region: 'montgomery'
+          category: 'urgent'
         },
         {
         	name: "Jefferson Urgent Care – Bensalem",
         	lat: 40.1132751,
         	lng: -74.9587764,
-          type: 'urgent',
-					region: 'montgomery'
+          category: 'urgent'
         },
         {
         	name: "Jefferson Urgent Care – Grant Avenue",
         	lat: 40.080427,
         	lng: -75.02851,
-          type: 'urgent',
-					region: 'montgomery'
+          category: 'urgent'
         },
         {
         	name: "Jefferson Urgent Care – Willow Grove",
         	lat: 40.1688489,
         	lng: -75.1262753,
-          type: 'urgent',
-					region: 'montgomery'
+          category: 'urgent'
         }
       ];
 
