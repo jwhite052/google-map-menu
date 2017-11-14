@@ -321,13 +321,61 @@
         padding: 0;
       }
       .locations__search {
-        padding: 20px 0;
+        margin: 0 0 15px 0;
       }
       .search-locations input,
       .search-locations select {
+        position: relative;
         font-size: 18px;
-        margin: 10px 15px 0 0;
+        margin: 0;
         border-radius: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border: 1px solid #ccc;
+        padding-left: 10px;
+        background-color: #fff;
+        color: #333;
+        height: 50px;
+      }
+      .search-locations select {
+        padding-right: 25px;
+      }
+      .search-locations__input-wrapper {
+        display: inline-block;
+        position: relative;
+        margin: 10px 10px 0 0;
+      }
+      .search-locations__select-wrapper {
+        display: inline-block;
+        position: relative;
+        margin: 10px 10px 0 0;
+      }
+      .search-locations__submit-wrapper {
+        display: inline-block;
+      }
+      .search-locations__submit {
+        height: 50px;
+        width: 50px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-color: #f2f4f8;
+        border-radius: 0;
+      }
+      .search-locations__select-wrapper::after {
+        content: '';
+        position: absolute;
+        z-index: 10;
+        display: block;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 10px;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #000;
       }
       .search-locations__address {
         height: 40px;
@@ -358,26 +406,37 @@
       <div class="locations__main">
         <div class="locations__search">
           <div class="search-locations">
-            <input class="search-locations__address" type="text" placeholder="Address" />
-            <select class="search-locations__distance">
-              <option class="default">All</option>
-              <option>5mi</option>
-              <option>10mi</option>
-              <option>25mi</option>
-            </select>
-            <select class="search-locations__region">
-              <option value="default">All</option>
-              <option value="philadelphia">Philadelphia</option>
-              <option value="montgomery">Montgomery County</option>
-              <option value="bucks">Bucks County</option>
-              <option value="jersey">South Jersey</option>
-            </select>
-            <select class="search-locations__type">
-              <option value="default">All</option>
-              <option value="hospitals">Hospitals</option>
-              <option value="outpatient">Outpatient</option>
-              <option value="urgent">Urgent Care</option>
-            </select>
+            <div class="search-locations__input-wrapper">
+              <input id="autocomplete" class="search-locations__address" type="text" placeholder="Address" />
+            </div>
+            <div class="search-locations__select-wrapper">
+              <select class="search-locations__distance">
+                <option class="default">All</option>
+                <option>5mi</option>
+                <option>10mi</option>
+                <option>25mi</option>
+              </select>
+            </div>
+            <div class="search-locations__select-wrapper">
+              <select class="search-locations__region">
+                <option value="default">All</option>
+                <option value="philadelphia">Philadelphia</option>
+                <option value="montgomery">Montgomery County</option>
+                <option value="bucks">Bucks County</option>
+                <option value="jersey">South Jersey</option>
+              </select>
+            </div>
+            <div class="search-locations__submit-wrapper">
+              <select class="search-locations__type">
+                <option value="default">All</option>
+                <option value="hospitals">Hospitals</option>
+                <option value="outpatient">Outpatient</option>
+                <option value="urgent">Urgent Care</option>
+              </select>
+            </div>
+            <div class="search-locations__button-wrapper">
+              <button class="search-locations__submit">Go</button>
+            </div>
           </div>
         </div>
         <div class="locations__map">
@@ -1279,483 +1338,119 @@
         }
       };
 
-      searchFields.address.addEventListener('keyup', function() {
-        if (this.value !== '') {
-          searchFields.distance.style.display = "none";
-        } else {
-          searchFields.distance.style.display = "inline-block";
-        }
-      });
+      // searchFields.address.addEventListener('keyup', function() {
+      //   console.log("Test");
+      //   console.log(this.value);
+      //   if (this.value !== '') {
+      //     searchFields.distance.style.display = "none";
+      //   } else {
+      //     searchFields.distance.style.display = "inline-block";
+      //   }
+      // });
 
       // attach listeners to search fields
       searchFields.region.addEventListener('change', updateMap);
       searchFields.type.addEventListener('change', updateMap);
 
-    } // end initMap()
-    </script>
-<!--
-        <div class="locations-cards-container">
-          <div class="locations-cards">
-            <div class="locations-card hospital-list is-expanded">
-              <div class="location-panel">
-                <div class="locations-panel-header">
-                  <h2>Hospitals</h2>
-                </div>
-                <div class="locations-panel-body">
-                  <div class="locations-panel-info">
-                    <div class="info-links">
-                      <a href="#">Get Directions</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#">View Location</a>
-                    </div>
-                  </div>
-                  <div class="locations-panel-list">
-                    <ul class="locations-list-ui"></ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="locations-card outpatient-list" style="height: auto;">
-              <div class="location-panel">
-                <div class="locations-panel-header">
-                  <h2>Outpatient</h2>
-                </div>
-                <div class="locations-panel-body">
-                  <div class="locations-panel-desc">
-                    <p>Jefferson Health offers an extensive care network with offices throughout Pennsylvania, New Jersey and Delaware.</p>
-                  </div>
-                  <div class="locations-panel-info">
-                  </div>
-                  <div class="locations-panel-list">
-                    <ul class="locations-list-ui"></ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="locations-card urgentcare-list" style="height: auto;">
-              <div class="location-panel">
-                <div class="locations-panel-header">
-                  <h2>Urgent Care</h2>
-                </div>
-                <div class="locations-panel-body">
-                  <div class="locations-panel-desc">
-                    <p>Jefferson Health offers an extensive care network with offices throughout Pennsylvania, New Jersey and Delaware.</p>
-                  </div>
-                  <div class="locations-panel-info">
-                  </div>
-                  <div class="locations-panel-list">
-                    <ul class="locations-list-ui"></ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
--->
+      // PLACES
 
+      // Bias the autocomplete object to the user's geographical location,
+      // as supplied by the browser's 'navigator.geolocation' object.
+      // function geolocate() {
+      //   if (navigator.geolocation) {
+      //     navigator.geolocation.getCurrentPosition(function(position) {
+      //       var geolocation = {
+      //         lat: position.coords.latitude,
+      //         lng: position.coords.longitude
+      //       };
+      //       var circle = new google.maps.Circle({
+      //         center: geolocation,
+      //         radius: position.coords.accuracy
+      //       });
+      //       autocomplete.setBounds(circle.getBounds());
+      //     });
+      //   }
+      // }
 
+      // document.getElementById('autocomplete').addEventListener('onfocus', function() {
+      //   console.log("Focus!");
+      // });
 
+      function initAutocomplete() {
+        // Create the autocomplete object, restricting the search to geographical
+        // location types.
+        autocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+            {types: ['geocode']});
 
-    <!-- <script>
-    function initMap() {
-      //var locationCard = document.getElementsByClassName('location-card')[0];
-      var startCoords = {lat: 39.9425448, lng: -75.1278647};
-      var startZoom = 11;
+        // When the user selects an address from the dropdown, populate the address
+        // fields in the form.
+        autocomplete.addListener('place_changed', fillInAddress);
+      }
 
-      // list of hospital locations
-      var locations = [
-        {
-        	name: "Abington Hospital",
-        	lat: 40.119136,
-        	lng: -75.119953,
-          type: 'hospitals',
-					region: 'bucks',
-          url: '',
-          address: '1200 Old York Rd.<br />Abington, PA 19001',
-          phone: '215-481-2000',
-          hours: ''
-        },
-        {
-        	name: "Abington - Lansdale Hospital",
-        	lat: 40.25115,
-        	lng: -75.271454,
-          type: 'hospitals',
-					region: 'bucks'
-        },
-        {
-        	name: "Thomas Jefferson University Hospital",
-        	lat: 39.9498262,
-        	lng: -75.1584227,
-          type: 'hospitals',
-					region: 'bucks'
-        },
-        {
-        	name: "Jefferson Hospital for Neuroscience",
-        	lat: 39.9480344,
-        	lng: -75.156207,
-          type: 'hospitals',
-					region: 'bucks'
-        },
-        {
-        	name: "Methodist Hospital",
-        	lat: 39.921183,
-        	lng: -75.169701,
-          type: 'hospitals',
-					region: 'bucks'
-        },
-        {
-        	name: "Aria − Bucks County Hospital",
-        	lat: 40.1830928,
-        	lng: -74.8725508,
-          type: 'hospitals',
-					region: 'bucks'
-        },
-        {
-        	name: "Aria – Frankford Hospital",
-        	lat: 40.0196895,
-        	lng: -75.0838933,
-          type: 'hospitals',
-					region: 'bucks'
-        },
-        {
-        	name: "Aria – Torresdale Hospital",
-        	lat: 40.0716736,
-        	lng: -74.9854092,
-          type: 'hospitals',
-					region: 'bucks'
-        },
-        {
-        	name: "Rothman Orthopaedic Specialty Hospital – Bensalem",
-        	lat: 40.1129362,
-        	lng: -74.9627666,
-          type: 'hospitals',
-					region: 'bucks'
-        },
-        {
-        	name: "Kennedy University Hospital - Cherry Hill",
-        	lat: 39.927982,
-        	lng: -75.015943,
-          type: 'hospitals',
-					region: 'bucks'
-        },
-        {
-        	name: "Kennedy University Hospital - Stratford",
-        	lat: 39.828275,
-        	lng: -75.008195,
-          type: 'hospitals',
-					region: 'bucks'
-        },
-        {
-        	name: "Kennedy University Hospital - Washington Township",
-        	lat: 39.735239,
-        	lng: -75.065340,
-          type: 'hospitals',
-					region: 'bucks'
-        }
-      ];
+      var geocoder = new google.maps.Geocoder();
 
-      // list of outpatient locations
-      var outpatientLocations = [
-        {
-        	name: "Abington Jefferson Health – Blue Bell",
-        	lat: 40.140623,
-        	lng: -75.285922,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Abington Jefferson Health – Lower Gwynedd",
-        	lat: 40.17472,
-        	lng: -75.22517,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Abington Jefferson Health – Montgomeryville",
-        	lat: 40.2391667,
-        	lng: -75.2315047,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Abington Jefferson Health – Warminster",
-        	lat: 40.185092,
-        	lng: -75.078765,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Abington Jefferson Health – Willow Grove",
-        	lat: 40.164239,
-        	lng: -75.1310205,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Jefferson - Bala Cynwyd",
-        	lat: 40.0050928,
-        	lng: -75.2192039,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Jefferson - Bala Cynwyd",
-        	lat: 39.9998876,
-        	lng: -75.2303063,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Jefferson Health - Smylie Times",
-        	lat: 40.0562602,
-        	lng: -75.0452195,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Jefferson Health - Navy Yard",
-        	lat: 39.8959772,
-        	lng: -75.1740603,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Jefferson Health - Turnersville",
-        	lat: 39.7370413,
-        	lng: -75.0468679,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Jefferson Health - Voorhees",
-        	lat: 39.844291,
-        	lng: -74.985362,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "The Annex",
-        	lat: 40.080427,
-        	lng: -75.02851,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "The Professional Court",
-        	lat: 40.1098113,
-        	lng: -75.0309162,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Aria Health – Center for Rehabilitation and Wellness",
-        	lat: 40.1834393,
-        	lng: -74.8680713,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Jefferson Health - Burlington",
-        	lat: 40.0492141,
-        	lng: -74.8707033,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Abington Jefferson Health – Elkins Park",
-        	lat: 40.082393,
-        	lng: -75.1279097,
-          type: 'outpatient',
-					region: 'philadelphia'
-        },
-        {
-        	name: "Jefferson Health – Art Museum",
-        	lat: 39.963721,
-        	lng: -75.173739,
-          type: 'outpatient',
-					region: 'philadelphia'
-        }
-      ];
+      var searchMarker;
+      var searchCircle;
 
-      // list of urgent care locations
-      var urgentcareLocations = [
-        {
-        	name: "Jefferson Urgent Care – Flourtown",
-        	lat: 40.111191,
-        	lng: -75.210331,
-          type: 'urgent',
-					region: 'montgomery'
-        },
-        {
-        	name: "Jefferson Urgent Care - Rittenhouse",
-        	lat: 39.9521761,
-        	lng: -75.1765097,
-          type: 'urgent',
-					region: 'montgomery'
-        },
-        {
-        	name: "Jefferson Urgent Care – Smylie Times",
-        	lat: 40.0562602,
-        	lng: -75.0452195,
-          type: 'urgent',
-					region: 'montgomery'
-        },
-        {
-        	name: "Jefferson Urgent Care – Washington Square",
-        	lat: 39.9479655,
-        	lng: -75.1532154,
-          type: 'urgent',
-					region: 'montgomery'
-        },
-        {
-        	name: "Jefferson Urgent Care – Bensalem",
-        	lat: 40.1132751,
-        	lng: -74.9587764,
-          type: 'urgent',
-					region: 'montgomery'
-        },
-        {
-        	name: "Jefferson Urgent Care – Grant Avenue",
-        	lat: 40.080427,
-        	lng: -75.02851,
-          type: 'urgent',
-					region: 'montgomery'
-        },
-        {
-        	name: "Jefferson Urgent Care – Willow Grove",
-        	lat: 40.1688489,
-        	lng: -75.1262753,
-          type: 'urgent',
-					region: 'montgomery'
-        }
-      ];
-
-      // initalize map
-      var map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 40.0556365, lng: -74.9905356},
-        zoom: 10,
-        minZoom: 9,
-        maxZoom: 16,
-        mapTypeControl: false,
-        streetViewControl: false,
-        styles: [{'featureType':'administrative','elementType':'labels.text.fill','stylers':[{'color':'#152456'}]},{'featureType':'administrative.neighborhood','elementType':'labels.text.fill','stylers':[{'color':'#569bca'}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#f2f4f8'}]},{'featureType':'landscape','elementType':'geometry.fill','stylers':[{'color':'#ffffff'}]},{'featureType':'poi','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'poi.park','elementType':'geometry.fill','stylers':[{'color':'#e6f3d6'},{'visibility':'on'}]},{'featureType':'road','elementType':'all','stylers':[{'saturation':-30},{'lightness':45},{'visibility':'simplified'}]},{'featureType':'road','elementType':'geometry.fill','stylers':[{'color':'#f2f4f8'}]},{'featureType':'road.highway','elementType':'all','stylers':[{'visibility':'simplified'}]},{'featureType':'road.highway','elementType':'geometry.fill','stylers':[{'color':'#cccccc'},{'visibility':'simplified'}]},{'featureType':'road.highway','elementType':'labels.text','stylers':[{'color':'#333333'}]},{'featureType':'road.arterial','elementType':'geometry.fill','stylers':[{'color':'#f4f4f4'}]},{'featureType':'road.arterial','elementType':'labels.text.fill','stylers':[{'color':'#787878'}]},{'featureType':'road.arterial','elementType':'labels.icon','stylers':[{'visibility':'off'}]},{'featureType':'transit','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#eaf6f8'},{'visibility':'on'}]},{'featureType':'water','elementType':'geometry.fill','stylers':[{'color':'#addbf9'}]}]
-      });
-
-      function locationCardUI(list, element) {
-
-        // UI elements
-        var elementsUI = {
-          'list': element.getElementsByClassName('locations-list-ui')[0],
-          'info': element.getElementsByClassName('locations-panel-info')[0],
-          'header': element.getElementsByClassName('locations-panel-header')[0]
-        };
-
-        elementsUI.header.addEventListener('click', function() {
-          var allLocationCards = document.getElementsByClassName('locations-card');
-          for (var i = 0; i < allLocationCards.length; i++) {
-            if (allLocationCards[i] === element) {
-              if (allLocationCards[i].className.indexOf('is-expanded') === -1) {
-                allLocationCards[i].className += ' is-expanded';
+      function fillInAddress() {
+        // Get the place details from the autocomplete object.
+        var place = autocomplete.getPlace();
+        console.log(place);
+        geocoder.geocode({'address': place.name}, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+              if (searchMarker) {
+                searchMarker.setMap(null);
               }
-            } else {
-              allLocationCards[i].classList.remove('is-expanded');
-            }
-          }
-        });
-
-        // create UI for location listings
-        for (var i = 0; i < list.length; i++) {
-          var el = document.createElement('LI');
-          el.innerHTML = list[i].name;
-
-          var locationInfoBox = '<div class="location-info-box">' +
-            '<h3>' + list[i].name + '</h3>' +
-            '<p>' + list[i].address + '</p>' +
-            '<p>' + '<span>Phone:</span><br />' + list[i].phone + '</p>' +
-            '</div>';
-
-          // closure used to address loop scope issue
-          el.addEventListener('click', (function(index, element, content) {
-            return function() {
+              searchMarker = new google.maps.Marker({
+                position: results[0].geometry.location,
+                map: map,
+                animation: google.maps.Animation.DROP,
+                optimized: false,
+                zIndex:99999999
+              });
               map.setOptions({
-                center: {lat: list[index].lat, lng: list[index].lng},
+                center: results[0].geometry.location,
                 zoom: 15
               });
-              element.innerHTML = content;
-            };
-          }(i, elementsUI.info, locationInfoBox)));
-
-          elementsUI.list.appendChild(el);
-        }
-
-        // list of marker objects
-        //var markers = [];
-
-        // create a map marker for each location
-        for (var i = 0; i < list.length; i++) {
-          // store new marker in list
-          var marker = new google.maps.Marker({
-            position: {lat: list[i].lat, lng: list[i].lng},
-            map: map,
-            animation: google.maps.Animation.DROP,
-
-            // custom properties
-            location_id: i
-          });
-          marker.addListener('click', function() {
-            map.setOptions({
-              center: this.position,
-              zoom: 15
-            });
-          });
-          //markers.push(marker);
+              if (searchCircle) {
+                searchCircle.setMap(null);
+              }
+              searchCircle = new google.maps.Circle({
+                strokeColor: '#569bca',
+                strokeOpacity: 0.5,
+                strokeWeight: 2,
+                fillColor: '#569bca',
+                fillOpacity: 0.2,
+                map: map,
+                center: results[0].geometry.location,
+                radius: 500
+              });
+            } else {
+              console.log('No results found');
+            }
+          } else {
+            console.log('Geocoder failed due to: ' + status);
+          }
+        });
+        console.log("Test");
+        console.log(searchFields.address.value);
+        if (searchFields.address.value === '') {
+          console.log("Hide");
+          searchFields.distance.style.display = "none";
+        } else {
+          console.log("Show");
+          searchFields.distance.style.display = "inline-block";
         }
       }
 
-      var hospitalLocationCard    = new locationCardUI(locations, document.getElementsByClassName('locations-card')[0]);
-      var outpatientLocationCard  = new locationCardUI(outpatientLocations, document.getElementsByClassName('locations-card')[1]);
-      var urgentcareLocationCard  = new locationCardUI(urgentcareLocations, document.getElementsByClassName('locations-card')[2]);
+      initAutocomplete();
 
+    } // end initMap()
+    </script>
 
-      //
-      // var locationsListUI = document.getElementsByClassName('locations-list-ui')[0];
-      //
-      // var locationsPanelInfo = document.getElementsByClassName('locations-panel-info')[0];
-      //
-      // // list of location info boxes
-      // var locationInfoBoxes = [];
-      //
-      // for (var i = 0; i < locations.length; i++) {
-      //   var el = document.createElement('LI');
-      //   el.innerHTML = locations[i].name;
-      //
-      //   var locationInfoBox = '<div class="location-info-box">' +
-      //     '<h3>' + locations[i].name + '</h3>' +
-      //     '<p>' + 'Address:<br />Phone:<br />' + '</p>'
-      //     '</div>';
-      //
-      //   // closure used to address loop scope issue
-      //   el.addEventListener('click', (function(i, locationsPanelInfo, locationInfoBox) {
-      //     return function() {
-      //       map.setOptions({
-      //         center: {lat: locations[i].lat, lng: locations[i].lng},
-      //         zoom: 14
-      //       });
-      //       locationsPanelInfo.innerHTML = locationInfoBox;
-      //     };
-      //   }(i, locationsPanelInfo, locationInfoBox)));
-      //
-      //   locationsListUI.appendChild(el);
-      // }
-
-
-
-
-
-
-    }
-    </script> -->
-    <!--<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-    </script>-->
     <!-- Jefferson API Key: AIzaSyAdXlaNoumqLdoV5BNGvKes613OO_Zcdyw -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3Ljo3gaxiAY83sPabqHZCa7_GFA7a9Jg&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3Ljo3gaxiAY83sPabqHZCa7_GFA7a9Jg&callback=initMap&libraries=places" async defer></script>
   </body>
 </html>
