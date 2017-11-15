@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Locations Map</title>
     <style>
       /* Always set the map height explicitly to define the size of the div
@@ -180,6 +181,17 @@
         float: left;
         width: calc(300px);
       }
+      @media only screen and (max-width: 640px) {
+        .locations__main {
+          width: 100%;
+          margin-bottom: 30px;
+          padding-right: 0px;
+        }
+        .locations__sidebar {
+          background-color: blue;
+          width: 100%;
+        }
+      }
       .locations-menu {
         height: 500px;
         background-color: #f2f4f8;
@@ -286,6 +298,11 @@
         width: 100%;
         height: 400px;
       }
+      @media only screen and (max-width: 640px) {
+        .locations__map{
+          height: 300px;
+        }
+      }
       .locations__search {
 
       }
@@ -320,8 +337,28 @@
         margin: 0;
         padding: 0;
       }
+      @media only screen and (max-width: 640px) {
+        .locations__header {
+          padding-bottom: 20px;
+        }
+        .locations__title {
+          width: 100%;
+          margin-bottom: 20px;
+        }
+        .locations__title > h2 {
+          font-size: 36px;
+        }
+        .locations__intro {
+          width: 100%;
+        }
+      }
       .locations__search {
         margin: 0 0 15px 0;
+      }
+      .locations__search::after {
+        content: '';
+        display: table;
+        clear: both;
       }
       .search-locations input,
       .search-locations select {
@@ -342,17 +379,24 @@
         padding-right: 25px;
       }
       .search-locations__input-wrapper {
-        display: inline-block;
+        float: left;
         position: relative;
         margin: 10px 10px 0 0;
       }
       .search-locations__select-wrapper {
-        display: inline-block;
+        float: left;
+        position: relative;
+        margin: 10px 10px 0 0;
+      }
+      .search-locations__distance-wrapper {
+        float: left;
         position: relative;
         margin: 10px 10px 0 0;
       }
       .search-locations__submit-wrapper {
-        display: inline-block;
+        float: left;
+        position: relative;
+        margin: 35px 10px 0 0;
       }
       .search-locations__submit {
         height: 50px;
@@ -363,7 +407,29 @@
         background-color: #f2f4f8;
         border-radius: 0;
       }
-      .search-locations__select-wrapper::after {
+      .search-locations__address {
+        width: 350px;
+      }
+      .search-locations__distance {
+
+      }
+      .search-locations__region {
+
+        margin: 0 20px 0 0;
+      }
+      .search-locations__type {
+
+      }
+      .search-locations label {
+        display: block;
+        font-size: 12px;
+        height: 20px;
+        margin: 0 0 5px 5px;
+      }
+      .dropdown-arrow-wrapper {
+        position: relative;
+      }
+      .dropdown-arrow-wrapper::after {
         content: '';
         position: absolute;
         z-index: 10;
@@ -377,19 +443,37 @@
         border-right: 5px solid transparent;
         border-top: 5px solid #000;
       }
-      .search-locations__address {
-        height: 40px;
-        width: 300px;
+      @media only screen and (max-width: 640px) {
+        .search-locations input,
+        .search-locations select {
+          height: 30px;
+          width: 100%;
+        }
+        .search-locations [class*="-wrapper"] {
+          width: 100%;
+        }
+        .search-locations label {
+          margin: 0;
+        }
       }
-      .search-locations__distance {
-        height: 40px;
+      .locations__search-options {
+        text-align: right;
+        margin: 0 0 10px 0;
+        color: #ccc;
       }
-      .search-locations__region {
-        height: 40px;
-        margin: 0 20px 0 0;
+      .locations__search-options a {
+        font-size: 14px;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: #569bca;
+        font-weight: bold;
+        display: inline-block;
+        margin: 0 10px;
       }
-      .search-locations__type {
-        height: 40px;
+      @media only screen and (max-width: 640px) {
+        .locations__search-options {
+          text-align: center;
+        }
       }
     </style>
   </head>
@@ -407,37 +491,50 @@
         <div class="locations__search">
           <div class="search-locations">
             <div class="search-locations__input-wrapper">
+              <label for="autocomplete">Address</label>
               <input id="autocomplete" class="search-locations__address" type="text" placeholder="Address" />
             </div>
-            <div class="search-locations__select-wrapper">
-              <select class="search-locations__distance">
-                <option class="default">All</option>
-                <option>5mi</option>
-                <option>10mi</option>
-                <option>25mi</option>
-              </select>
+            <div class="search-locations__distance-wrapper" style="display: none;">
+              <label for="searchLocationsDistance">Within</label>
+              <div class="dropdown-arrow-wrapper">
+                <select id="searchLocationsDistance" class="search-locations__distance">
+                  <option value="1">1mi</option>
+                  <option value="5">5mi</option>
+                  <option value="10">10mi</option>
+                  <option value="25">25mi</option>
+                </select>
+              </div>
             </div>
             <div class="search-locations__select-wrapper">
-              <select class="search-locations__region">
-                <option value="default">All</option>
-                <option value="philadelphia">Philadelphia</option>
-                <option value="montgomery">Montgomery County</option>
-                <option value="bucks">Bucks County</option>
-                <option value="jersey">South Jersey</option>
-              </select>
+              <label for="searchLocationsRegion">Region</label>
+              <div class="dropdown-arrow-wrapper">
+                <select id="searchLocationsRegion" class="search-locations__region">
+                  <option value="default">All</option>
+                  <option value="philadelphia">Philadelphia</option>
+                  <option value="montgomery">Montgomery County</option>
+                  <option value="bucks">Bucks County</option>
+                  <option value="jersey">South Jersey</option>
+                </select>
+              </div>
             </div>
-            <div class="search-locations__submit-wrapper">
-              <select class="search-locations__type">
-                <option value="default">All</option>
-                <option value="hospitals">Hospitals</option>
-                <option value="outpatient">Outpatient</option>
-                <option value="urgent">Urgent Care</option>
-              </select>
+            <div class="search-locations__select-wrapper">
+              <label for="searchLocationsType">Type</label>
+              <div class="dropdown-arrow-wrapper">
+                <select id="searchLocationsType" class="search-locations__type">
+                  <option value="default">All</option>
+                  <option value="hospitals">Hospitals</option>
+                  <option value="outpatient">Outpatient</option>
+                  <option value="urgent">Urgent Care</option>
+                </select>
+              </div>
             </div>
-            <div class="search-locations__button-wrapper">
+            <!-- <div class="search-locations__submit-wrapper">
               <button class="search-locations__submit">Go</button>
-            </div>
+            </div> -->
           </div>
+        </div>
+        <div class="locations__search-options">
+          <a class="locations__search-reset" href="#">Reset Map</a>
         </div>
         <div class="locations__map">
           <div id="map"></div>
@@ -560,7 +657,7 @@
       }
 
       var mapdefaults = {
-        center: {lat: 40.0556365, lng: -74.9905356},
+        center: {lat: 40.0556365, lng: -75.1},
         zoom: 10
       }
 
@@ -572,7 +669,8 @@
         maxZoom: 16,
         mapTypeControl: false,
         streetViewControl: false,
-        clickableIcons: false
+        clickableIcons: false,
+        styles:  [{'featureType':'administrative','elementType':'labels.text.fill','stylers':[{'color':'#152456'}]},{'featureType':'administrative.neighborhood','elementType':'labels.text.fill','stylers':[{'color':'#569bca'}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#f2f4f8'}]},{'featureType':'landscape','elementType':'geometry.fill','stylers':[{'color':'#ffffff'}]},{'featureType':'poi','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'poi.park','elementType':'geometry.fill','stylers':[{'color':'#e6f3d6'},{'visibility':'on'}]},{'featureType':'road','elementType':'all','stylers':[{'saturation':-30},{'lightness':45},{'visibility':'simplified'}]},{'featureType':'road','elementType':'geometry.fill','stylers':[{'color':'#f2f4f8'}]},{'featureType':'road.highway','elementType':'all','stylers':[{'visibility':'simplified'}]},{'featureType':'road.highway','elementType':'geometry.fill','stylers':[{'color':'#cccccc'},{'visibility':'simplified'}]},{'featureType':'road.highway','elementType':'labels.text','stylers':[{'color':'#333333'}]},{'featureType':'road.arterial','elementType':'geometry.fill','stylers':[{'color':'#f4f4f4'}]},{'featureType':'road.arterial','elementType':'labels.text.fill','stylers':[{'color':'#787878'}]},{'featureType':'road.arterial','elementType':'labels.icon','stylers':[{'visibility':'off'}]},{'featureType':'transit','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#eaf6f8'},{'visibility':'on'}]},{'featureType':'water','elementType':'geometry.fill','stylers':[{'color':'#addbf9'}]}]
       });
 
       // Model
@@ -588,10 +686,10 @@
             region: 'montgomery'
           },
           info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
+            address: '1200 Old York Rd.<br />Abington, PA 19001',
             phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
-            url: '#',
+            hours: '',
+            url: 'https://www.abingtonhealth.org/our-locations/abington-hospital/',
             directionsurl: '#'
           }
         },
@@ -607,9 +705,9 @@
           },
           info: {
             name: "Abington - Lansdale Hospital",
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
+            address: '100 Medical Campus Dr.<br />Lansdale, PA 19446',
+            phone: '215-368-2100',
+            hours: '',
             url: '#',
             directionsurl: '#'
           }
@@ -625,9 +723,9 @@
             region: 'philadelphia'
           },
           info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
+            address: '111 South 11th Street<br />Philadelphia, PA 19107',
+            phone: '215-955-6000<br />1-800-JEFF-NOW (215-533-3669)',
+            hours: '',
             url: '#',
             directionsurl: '#'
           }
@@ -643,9 +741,9 @@
             region: 'philadelphia'
           },
           info: {
-            address: '1234 Main St.<br />Philadelphia, PA 19107',
-            phone: '215-481-2000',
-            hours: 'M-S: 10am - 10pm',
+            address: '900 Walnut Street<br />Philadelphia, PA 19107',
+            phone: '215-955-6000<br />1-800-JEFF-NOW (215-533-3669)',
+            hours: '',
             url: '#',
             directionsurl: '#'
           }
@@ -1324,7 +1422,6 @@
       var currentMarkers = markers;
 
       var updateMap = function() {
-        console.log("Changed!");
         var region = document.getElementsByClassName('search-locations__region')[0].value;
         var type = document.getElementsByClassName('search-locations__type')[0].value;
 
@@ -1335,6 +1432,39 @@
           } else {
             currentMarkers[i].setMap(null);
           }
+        }
+      };
+
+      var updateMapRadius = function() {
+        var distance = document.getElementsByClassName('search-locations__distance')[0].value;
+        var address = document.getElementsByClassName('search-locations__address')[0].value;
+
+        if (distance !== 'default') {
+          console.log('Distance: ' + distance);
+          switch (distance) {
+            case '1':
+              currentSearchCircle.setOptions({radius: getRadiusInMeters(1)});
+              map.setOptions({zoom: 16, center: currentSearchMarker.position});
+              break;
+            case '5':
+              currentSearchCircle.setOptions({radius: getRadiusInMeters(5)});
+              map.setOptions({zoom: 13, center: currentSearchMarker.position});
+              break;
+            case '10':
+              currentSearchCircle.setOptions({radius: getRadiusInMeters(10)});
+              map.setOptions({zoom: 11, center: currentSearchMarker.position});
+              break;
+            case '25':
+              currentSearchCircle.setOptions({radius: getRadiusInMeters(25)});
+              map.setOptions({zoom: 10, center: currentSearchMarker.position});
+              break;
+            default:
+              break;
+          }
+        }
+
+        function getRadiusInMeters(miles) {
+          return (1609.34 * miles) / 2;
         }
       };
 
@@ -1351,6 +1481,45 @@
       // attach listeners to search fields
       searchFields.region.addEventListener('change', updateMap);
       searchFields.type.addEventListener('change', updateMap);
+      searchFields.distance.addEventListener('change', updateMapRadius);
+
+      document.getElementsByClassName('locations__search-reset')[0].addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentSearchMarker) {
+          currentSearchCircle.setMap(null);
+          currentSearchMarker.setMap(null);
+        }
+        map.setOptions({center: mapdefaults.center, zoom: mapdefaults.zoom });
+        clearMarkers();
+        setMapOnAll(map);
+
+        searchFields.address.value = '';
+        searchFields.region.selectedIndex = 0;
+        searchFields.type.selectedIndex = 0;
+        searchFields.distance.selectedIndex = 0;
+        document.getElementsByClassName('search-locations__distance-wrapper')[0].style.display = "none";
+      });
+
+      // document.getElementsByClassName('locations__search-clear')[0].addEventListener('click', function(e) {
+      //   e.preventDefault();
+      //   searchFields.address.value = '';
+      //   searchFields.region.selectedIndex = 0;
+      //   searchFields.type.selectedIndex = 0;
+      //   searchFields.distance.selectedIndex = 0;
+      //   document.getElementsByClassName('search-locations__distance-wrapper')[0].style.display = "none";
+      // });
+
+      // Sets the map on all markers in the array.
+      function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+        }
+      }
+
+      // Removes the markers from the map, but keeps them in the array.
+      function clearMarkers() {
+        setMapOnAll(null);
+      }
 
       // PLACES
 
@@ -1390,8 +1559,8 @@
 
       var geocoder = new google.maps.Geocoder();
 
-      var searchMarker;
-      var searchCircle;
+      var currentSearchMarker;
+      var currentSearchCircle;
 
       function fillInAddress() {
         // Get the place details from the autocomplete object.
@@ -1400,32 +1569,34 @@
         geocoder.geocode({'address': place.name}, function(results, status) {
           if (status === 'OK') {
             if (results[0]) {
-              if (searchMarker) {
-                searchMarker.setMap(null);
+              if (currentSearchMarker) {
+                currentSearchMarker.setMap(null);
               }
-              searchMarker = new google.maps.Marker({
+              currentSearchMarker = new google.maps.Marker({
                 position: results[0].geometry.location,
                 map: map,
                 animation: google.maps.Animation.DROP,
                 optimized: false,
-                zIndex:99999999
+                // zIndex:99999999,
+                icon: 'darkblue-center-marker-icon.png'
               });
+              // currentSearchMarker.setAnimation(google.maps.Animation.BOUNCE);
               map.setOptions({
                 center: results[0].geometry.location,
                 zoom: 15
               });
-              if (searchCircle) {
-                searchCircle.setMap(null);
+              if (currentSearchCircle) {
+                currentSearchCircle.setMap(null);
               }
-              searchCircle = new google.maps.Circle({
+              currentSearchCircle = new google.maps.Circle({
                 strokeColor: '#569bca',
-                strokeOpacity: 0.5,
-                strokeWeight: 2,
+                strokeOpacity: 0.7,
+                strokeWeight: 1,
                 fillColor: '#569bca',
-                fillOpacity: 0.2,
+                fillOpacity: 0.1,
                 map: map,
                 center: results[0].geometry.location,
-                radius: 500
+                radius: 1609.34
               });
             } else {
               console.log('No results found');
@@ -1438,10 +1609,12 @@
         console.log(searchFields.address.value);
         if (searchFields.address.value === '') {
           console.log("Hide");
-          searchFields.distance.style.display = "none";
+          document.getElementsByClassName('search-locations__distance-wrapper')[0].style.display = "none";
+          currentSearchMarker.setMap(null);
+          currentSearchCircle.setMap(null);
         } else {
           console.log("Show");
-          searchFields.distance.style.display = "inline-block";
+          document.getElementsByClassName('search-locations__distance-wrapper')[0].style.display = "inline-block";
         }
       }
 
